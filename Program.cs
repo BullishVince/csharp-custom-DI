@@ -1,5 +1,8 @@
 ﻿var di = new CustomDependencyInjector();
-di.Register<IAwesomeService, AwesomeService>();
+di.Add<IAwesomeService, AwesomeService>();
 
-var x = di.Resolve<IAwesomeService>();
+var x = di.Get<IAwesomeService>();
 Console.WriteLine(x.GetText());
+
+di.Dispose<IAwesomeService>();
+var y = di.Get<IAwesomeService>(); //return [Unhandled exception. System.InvalidOperationException: Type is not dependency injected]
