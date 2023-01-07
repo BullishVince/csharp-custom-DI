@@ -1,19 +1,21 @@
 public class CustomDependencyInjector
 {
-    private readonly IList<Type> _RegisteredTypes = new List<Type>();
+    private readonly IList<(Type,Type)> _RegisteredTypes = new List<(Type,Type)>();
 
     public void Add<I, C>()
     {
         if (typeof(I).IsAssignableFrom(typeof(C)))
         {
-            Type type = typeof(I);
-            _RegisteredTypes.Add(type);
+            Type interfaceType = typeof(I);
+            Type classType = typeof(C);
+            _RegisteredTypes.Add((interfaceType, classType));
         }
     }
 
     public T Get<T>()
     {
-        if (!_RegisteredTypes.Contains(typeof(T)))
+        var classType = _RegisteredTypes.FirstOrDefault(t => t.Item1 == typeof(T));
+        if (classType.Item1 == null)
         {
             throw new InvalidOperationException("Type is not dependency injected");
         }
